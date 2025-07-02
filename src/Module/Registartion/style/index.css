@@ -1,0 +1,120 @@
+.user-registration-form {
+  width: 400px;
+  max-width: 100%;
+  margin: 50px auto;
+  background-color: #f37872;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif;
+}
+
+.user-registration-form h1 {
+  text-align: center;
+  margin: 0;
+  padding: 20px 0;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+}
+
+.user-registration-form form {
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  font-family: "Poppins", sans-serif;
+}
+.user-manage-verify {
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  font-family: "Poppins", sans-serif;
+}
+
+.user-registration-form form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: gray;
+  font-family: "Poppins", sans-serif;
+}
+
+.user-registration-form form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  color: black;
+}
+.inputStyle {
+  width: 50% !important;
+  padding: 12px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+  color: black;
+  height: 60px;
+  margin: 0 15px;
+}
+.otp-user-registration {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.user-registration-form form input[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #ff0000;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+.user-registration-form input[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #ff0000;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.forgot-pwd-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #ff0000;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.forgot-pwd-btn:hover {
+  background-color: #ff3834;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.user-registration-form form input[type="submit"]:hover {
+  background-color: #ff3834;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+.user-registration-form input[type="submit"]:hover {
+  background-color: #ff3834;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}

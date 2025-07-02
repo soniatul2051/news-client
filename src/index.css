@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  /* overflow-x: hidden; */
+  box-sizing: border-box;
+}
+
+.container {
+  margin: 0 45px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+@media screen and (min-width: 1000px) {
+  .homepage-container {
+    width: 90%;
+    margin: 0 auto;
+  }
+  .homepage-flashwala {
+    /* background-color: red; */
+    display: flex;
+    width: 90%;
+    margin: 0 auto;
+    justify-content: center;
+  }
+  .homepage-mainwala {
+    display: flex;
+    width: 100%;
+    margin: 15px auto;
+    justify-content: center;
+  }
+}
+.container2 {
+  padding: 10px 50px;
+}
+body {
+  background-color: #f3f3f3ff;
+}
+.mob-ad {
+  display: none;
+}
+@media screen and (max-width: 500px) {
+  .container {
+    margin: 0;
+    gap: 0 !important;
+  }
+  .related-news-card {
+    padding: 5px 2px;
+    justify-content: start;
+  }
+  #Photos {
+    padding: 12px !important;
+  }
+  .pgt {
+    max-height: 175px;
+    overflow: hidden;
+    margin-top: 10px;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .mob-ad {
+    display: block;
+  }
+
+  .item-page-card-main-conatiner-img {
+    width: 50%;
+    height: 120px;
+    overflow: hidden;
+  }
+
+  .flash-news-2 {
+    margin-top: 0 !important;
+    padding: 0 !important;
+  }
+  .main-left-side-top {
+    height: 40px !important;
+  }
+  .main-left-side-top > div {
+    margin-top: 4px;
+  }
+  .main-page-slider-setting {
+    width: 100% !important;
+  }
+  .ImageCarouselContainer {
+    position: static;
+    background-color: transparent !important;
+  }
+  .container3 {
+    padding: 3px !important;
+    /* margin-top: 65px; */
+    /* background-color: red;
+    padding: 10px; */
+  }
+  .container2 {
+    padding: 0;
+  }
+  .main-component-group {
+    padding: 10px 8px 20px 8px !important;
+    flex-direction: column-reverse !important;
+  }
+
+  .all-videos {
+    padding: 0.6rem 0.6rem !important;
+  }
+}

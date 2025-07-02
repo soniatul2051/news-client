@@ -1,0 +1,106 @@
+.mainDashBoardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 30px;
+  /* gap: 30px; */
+  justify-content: center;
+}
+.dashMainHeading {
+  text-align: left;
+  margin-bottom: 5px;
+  color: black;
+  margin-left: 4.6rem;
+  font-weight: bold;
+  font-size: 20px;
+}
+.react-slideshow-container + ul.indicators {
+  display: none;
+}
+.dashToplineElements {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+.mainDashBoardContainerChild {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  box-sizing: border-box;
+  text-align: start;
+  width: 240px;
+  aspect-ratio: 1.3;
+  background-color: aqua;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  cursor: pointer;
+}
+.mainDashBoardContainerChild:hover {
+  scale: 1.01;
+}
+
+.mainDashBoardContainerChild1 {
+  background-color: blue;
+}
+.mainDashBoardContainerChild2 {
+  background-color: rgb(138, 213, 238);
+}
+.mainDashBoardContainerChild3 {
+  background-color: rgb(237 207 74);
+}
+.mainDashBoardContainerChild4 {
+  background-color: rgb(26, 117, 26);
+}
+.mainDashBoardContainerChild5 {
+  background-color: rgb(238, 65, 65);
+}
+.dashCardTitle {
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.dashCardNumber {
+  margin-bottom: 5px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.dashCardIcon {
+  font-size: 35px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.mainDashLine {
+  width: 50%;
+  height: 5px;
+  border-radius: 5px;
+  background-color: white;
+}
+.ant-menu-item {
+  width: 200px;
+  & svg {
+    width: 50px;
+  }
+}
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu
+  .ant-menu-item
+  .ant-menu-item-icon
+  + span {
+  margin-inline-start: 0;
+}
+.ant-layout-sider {
+  min-width: 250px !important;
+}
+.dashsmallContainer {
+  display: flex;
+}
+.dashsmallContainer .dashsmallContaineritem {
+  margin-bottom: 5px;
+  flex-grow: 1;
+}
+.dashsmallContaineritem2 {
+  padding-left: 5px;
+  border-left: 5px solid white;
+}
