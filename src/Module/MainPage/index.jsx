@@ -72,7 +72,6 @@ const MainPage = () => {
   const [allCategoriesData, setAllCategoriesData] = useState(null);
   const [DisplayImageCrousal, setDisplayImageCrousal] = useState(false);
   const [technology, setTechnology] = useState([]);
-  // Babloo 
   const [priorityArticles, setPriorityArticles] = useState([]);
 
   // console.log("topstriies in index: ", topStories);
@@ -80,8 +79,31 @@ const MainPage = () => {
   const [canScrollRight, setCanScrollRight] = useState(true);
   const breakingNewsRef = useRef(null);
   const photosRef = useRef(null);
-  const [customSlider, setCustomSlider] = useState([]);
-  const [customBannerSlider, setCustomBannerSlider] = useState([]);
+
+  // Slider Fix Babloo 
+  // const [fixedArticles, setFixedArticles] = useState({ first: null, second: null });
+  const [fixedArticles, setFixedArticles] = useState({ 1: null, 2: null });
+
+  useEffect(() => {
+    const fetchFixedArticles = async () => {
+      try {
+        // Fetch articles with fixed positions
+        const [firstPosResponse, secondPosResponse] = await Promise.all([
+          axios.get(`${API_URL}/article?fixedPosition=1&status=online`),
+          axios.get(`${API_URL}/article?fixedPosition=2&status=online`)
+        ]);
+        
+        setFixedArticles({
+          first: firstPosResponse.data[0] || null,
+          second: secondPosResponse.data[0] || null
+        });
+      } catch (error) {
+        console.error("Error fetching fixed articles:", error);
+      }
+    };
+
+    fetchFixedArticles();
+  }, []);
 
   const scrollLeft = (ref) => {
     const container = ref.current;
@@ -296,7 +318,7 @@ const MainPage = () => {
     };
 
     fetchArticles();
-    fetchArticlesSlider();
+    // fetchArticlesSlider();
   }, []);
 
   // const fetchArticlesSlider = async () => {
@@ -353,26 +375,26 @@ const MainPage = () => {
       });
   }, []);
 
-  const fetchArticlesSlider = async () => {
-    try {
-      // Fetch sequenced slider articles (1 and 2)
-      const sequencedResponse = await axios.get(
-        `${API_URL}/article?slider=true&status=online&sequence=1&sequence=2`
-      );
+  // const fetchArticlesSlider = async () => {
+  //   try {
+  //     // Fetch sequenced slider articles (1 and 2)
+  //     const sequencedResponse = await axios.get(
+  //       `${API_URL}/article?slider=true&status=online&sequence=1&sequence=2`
+  //     );
 
-      // Sort by sequence (1 first, then 2)
-      const sequencedArticles = sequencedResponse.data.sort((a, b) => a.sequence - b.sequence);
-      setbreakingNewsSlider(sequencedArticles);
+  //     // Sort by sequence (1 first, then 2)
+  //     const sequencedArticles = sequencedResponse.data.sort((a, b) => a.sequence - b.sequence);
+  //     setbreakingNewsSlider(sequencedArticles);
 
-      // Fetch regular slider articles (without sequence)
-      const sliderResponse = await axios.get(
-        `${API_URL}/article?slider=true&status=online&limit=8&sequence=0`
-      );
-      setSliderArticles(sliderResponse.data);
-    } catch (error) {
-      console.error("Error fetching slider articles:", error);
-    }
-  };
+  //     // Fetch regular slider articles (without sequence)
+  //     const sliderResponse = await axios.get(
+  //       `${API_URL}/article?slider=true&status=online&limit=8&sequence=0`
+  //     );
+  //     setSliderArticles(sliderResponse.data);
+  //   } catch (error) {
+  //     console.error("Error fetching slider articles:", error);
+  //   }
+  // };
 
   async function onClickAd(id) {
     try {
@@ -588,28 +610,9 @@ const MainPage = () => {
   const [adPopup, setAdPopup] = useState(false);
   useEffect(() => {
     setAdPopup(true);
-    fetchSliderArticles();
   }, []);
 
 
-  // Latest 01-07
-  const fetchSliderArticles = async () => {
-    try {
-      // First fetch sequenced articles (1 and 2)
-      const sequencedResponse = await axios.get(
-        `${API_URL}/article?slider=true&status=online&sequence=1&sequence=2`
-      );
-      setCustomBannerSlider(sequencedResponse.data);
-
-      // Then fetch other slider articles
-      const sliderResponse = await axios.get(
-        `${API_URL}/article?slider=true&status=online&limit=8`
-      );
-      setCustomSlider(sliderResponse.data);
-    } catch (error) {
-      console.error("Error fetching slider articles:", error);
-    }
-  };
   return (
     <div className="relative ">
       <div>
@@ -1299,136 +1302,248 @@ const MainPage = () => {
               </div>
             </div> */}
 
-            {/* Latest 01-07 */}
+            {/* SLider Fix BAbloo  */}
             <div className="image-conatiner">
-              {customBannerSlider.length >= 2 ? (
-                <>
-                  <div className="main-conatiner-image-1">
-                    <ImageCard
-                      height="100%"
-                      width="100%"
-                      img={customBannerSlider[0]?.image}
-                      text={customBannerSlider[0]?.title}
-                      slug={customBannerSlider[0]?.slug}
-                      id={customBannerSlider[0]?._id}
-                      isFirstPosition={customBannerSlider[0]?.sequence === 1}
-                    />
-                  </div>
-                  <div className="main-conatiner-image-2" style={{ marginLeft: "10px" }}>
-                    <ImageCard
-                      img={customBannerSlider[1]?.image}
-                      text={customBannerSlider[1]?.title}
-                      slug={customBannerSlider[1]?.slug}
-                      id={customBannerSlider[1]?._id}
-                      height="100%"
-                      width="100%"
-                      isSecondPosition={customBannerSlider[1]?.sequence === 2}
-                    />
-                  </div>
-                </>
-              ) : customBannerSlider.length === 1 ? (
-                <>
-                  <div className="main-conatiner-image-1">
-                    <ImageCard
-                      height="100%"
-                      width="100%"
-                      img={customBannerSlider[0]?.image}
-                      text={customBannerSlider[0]?.title}
-                      slug={customBannerSlider[0]?.slug}
-                      id={customBannerSlider[0]?._id}
-                      isFirstPosition={true}
-                    />
-                  </div>
-                  <div className="main-conatiner-image-2 empty" style={{ marginLeft: "10px" }}>
-                    <div>No secondary article</div>
-                  </div>
-                </>
-              ) : (
-                <div className="empty-slider">No featured articles</div>
-              )}
+              <div className="main-conatiner-image-1">
+                {fixedArticles.first ? (
+                  <ImageCard
+                    height="100%"
+                    width="100%"
+                    img={fixedArticles.first.image}
+                    text={fixedArticles.first.title}
+                    title={fixedArticles.first.title
+                      .replace(/[/\%.?]/g, "")
+                      .split(" ")
+                      .join("-")}
+                    slug={fixedArticles.first.slug}
+                    id={fixedArticles.first._id}
+                  />
+                ) : (
+                  <ImageCard
+                    height="100%"
+                    width="100%"
+                    img={breakingNews?.[0]?.image}
+                    text={breakingNews?.[0]?.title}
+                    title={breakingNews?.[0]?.title
+                      .replace(/[/\%.?]/g, "")
+                      .split(" ")
+                      .join("-")}
+                    slug={breakingNews?.[0]?.slug}
+                    id={breakingNews?.[0]?._id}
+                  />
+                )}
+              </div>
+              <div className="main-conatiner-image-2" style={{marginLeft: 10}}>
+                {fixedArticles.second ? (
+                  <ImageCard
+                    height="100%"
+                    width="100%"
+                    img={fixedArticles.second.image}
+                    text={fixedArticles.second.title}
+                    title={fixedArticles.second.title
+                      .replace(/[/\%.?]/g, "")
+                      .split(" ")
+                      .join("-")}
+                    slug={fixedArticles.second.slug}
+                    id={fixedArticles.second._id}
+                  />
+                ) : (
+                  <ImageCard
+                    img={breakingNews?.[1]?.image}
+                    text={breakingNews?.[1]?.title}
+                    title={breakingNews?.[1]?.title
+                      .replace(/[/\%.?]/g, "")
+                      .split(" ")
+                      .join("-")}
+                    slug={breakingNews?.[1]?.slug}
+                    id={breakingNews?.[1]?._id}
+                    height="100%"
+                    width="100%"
+                  />
+                )}
+              </div>
             </div>
 
-            {customSlider.length > 0 && (
-              <div style={{
+            <div
+              style={{
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "space-between",
                 marginTop: "3%",
                 marginBottom: "10px",
-              }}>
-                {/* Left slider */}
-                <div className="main-page-slider-setting">
-                  {sliderItem % 2 === 0 && customSlider[sliderItem] && (
-                    <div key={sliderItem}>
-                      <ImageCard
-                        img={customSlider[sliderItem].image}
-                        text={customSlider[sliderItem].title}
-                        slug={customSlider[sliderItem].slug}
-                        title={customSlider[sliderItem].title}
-                        id={customSlider[sliderItem]._id}
-                        height="50vh"
-                        width="100%"
-                      />
-                    </div>
-                  )}
+              }}
+            >
+              {/* With using rendering even numbers */}
+              <div className="main-page-slider-setting">
+                {sliderItem % 2 === 0 ? (
+                  <>
+                    {sliderArticles?.map((data, index) => {
+                      if (index == sliderItem) {
+                        return (
+                          <div key={index}>
+                            <ImageCard
+                              img={data.image}
+                              text={data.title}
+                              slug={data.slug}
+                              title={data.title}
+                              id={data._id}
+                              height="50vh"
+                              width="100%"
+                            />
+                          </div>
+                        );
+                      } else {
+                        <div key={index}>
+                          <ImageCard
+                            img={sliderItems[sliderItem]}
+                            text={data.title}
+                            slug={data.slug}
+                            title={data.title}
+                            id={data._id}
+                            height="50vh"
+                            width="100%"
+                          />
+                          ;
+                        </div>;
+                      }
+                    })}
+                  </>
+                ) : (
+                  <></>
+                )}
 
-                  <div className="main-page-slider-items">
-                    {customSlider
-                      .map((_, i) => i)
-                      .filter((i) => i % 2 === 0)
-                      .map((item) => (
-                        <div
-                          key={item}
-                          className={`slider-item ${sliderItem === item ? "slider-item-active" : ""}`}
-                          onClick={() => {
-                            setShowItem(false);
-                            setTimeout(() => {
-                              setShowItem(true);
-                              setSliderItem(item);
-                            }, 1000);
-                          }}
-                        ></div>
-                      ))}
-                  </div>
-                </div>
-
-                {/* Right slider */}
-                <div className="main-page-slider-setting">
-                  {sliderItem2 % 2 !== 0 && customSlider[sliderItem2] && (
-                    <div key={sliderItem2}>
-                      <ImageCard
-                        img={customSlider[sliderItem2].image}
-                        text={customSlider[sliderItem2].title}
-                        slug={customSlider[sliderItem2].slug}
-                        title={customSlider[sliderItem2].title}
-                        id={customSlider[sliderItem2]._id}
-                        height="50vh"
-                        width="100%"
-                      />
-                    </div>
-                  )}
-
-                  <div className="main-page-slider-items">
-                    {customSlider
-                      .map((_, i) => i)
-                      .filter((i) => i % 2 !== 0)
-                      .map((item) => (
-                        <div
-                          key={item}
-                          className={`slider-item ${sliderItem2 === item ? "slider-item-active" : ""}`}
-                          onClick={() => {
-                            setShowItem(false);
-                            setTimeout(() => {
-                              setShowItem(true);
-                              setSliderItem2(item);
-                            }, 1000);
-                          }}
-                        ></div>
-                      ))}
-                  </div>
+                <div className="main-page-slider-items ">
+                  {sliderArticles
+                    .map((_, i) => i)
+                    .filter((i) => i % 2 === 0)
+                    .map((item, index) => (
+                      <div
+                        key={item}
+                        className={`slider-item ${
+                          sliderItem === item ? "slider-item-active" : ""
+                        }`}
+                        onClick={() => {
+                          setShowItem(false);
+                          setTimeout(() => {
+                            setShowItem(true);
+                            setSliderItem(item);
+                          }, 1000);
+                        }}
+                      ></div>
+                    ))}
                 </div>
               </div>
-            )}
+
+              {/* without using rendering even numbers */}
+              {/* <div className="main-page-slider-setting p-2 bg-red-400">
+                {sliderArticles?.map((data, index) => {
+                  // Check if the current item matches the sliderItem index
+                  if (index === sliderItem) {
+                    return (
+                      <div key={index}>
+                        <ImageCard
+                          img={data.image}
+                          text={data.title}
+                          slug={data.slug}
+                          title={data.title}
+                          id={data._id}
+                          height="50vh"
+                          width="100%"
+                        />
+                      </div>
+                    );
+                  }
+                  return null; // Ensure nothing unnecessary is rendered
+                })}
+
+                <div className="main-page-slider-items">
+                  {sliderArticles
+                    .map((_, i) => i) // Generate index array
+                    .filter((i) => i % 2 === 0) // Filter even indexes
+                    .map((item) => (
+                      <div
+                        key={item}
+                        className={`slider-item ${
+                          sliderItem === item ? "slider-item-active" : ""
+                        }`}
+                        onClick={() => {
+                          setShowItem(false);
+                          setTimeout(() => {
+                            setShowItem(true);
+                            setSliderItem(item);
+                          }, 1000);
+                        }}
+                      ></div>
+                    ))}
+                </div>
+              </div> */}
+
+              <div className="main-page-slider-setting ">
+                {sliderItem2 % 2 !== 0 ? (
+                  <>
+                    {sliderArticles?.map((data, index) => {
+                      // let title = data?.title
+                      //   ?.replace(/[/\%.?]/g, "")
+                      //   .split(" ")
+                      //   .join("-");
+                      // if (data.slug) {
+                      //   title = data.slug;
+                      // }
+                      if (index == sliderItem2) {
+                        return (
+                          <div key={index}>
+                            <ImageCard
+                              img={data.image}
+                              text={data.title}
+                              slug={data.slug}
+                              title={data.title}
+                              id={data._id}
+                              height="50vh"
+                              width="100%"
+                            />
+                          </div>
+                        );
+                      } else {
+                        <div key={index}>
+                          <ImageCard
+                            img={sliderItems[sliderItem2]}
+                            text={data.title}
+                            slug={data.slug}
+                            title={data.title}
+                            id={data._id}
+                            height="50vh"
+                            width="100%"
+                          />
+                        </div>;
+                      }
+                    })}
+                  </>
+                ) : (
+                  <></>
+                )}
+
+                <div className="main-page-slider-items">
+                  {sliderArticles
+                    .map((_, i) => i)
+                    .filter((i) => i % 2 !== 0)
+                    .map((item, index) => (
+                      <div
+                        key={item}
+                        className={`slider-item ${
+                          sliderItem2 === item ? "slider-item-active" : ""
+                        }`}
+                        onClick={() => {
+                          setShowItem(false);
+                          setTimeout(() => {
+                            setShowItem(true);
+                            setSliderItem2(item);
+                          }, 1000);
+                        }}
+                      ></div>
+                    ))}
+                </div>
+              </div>
+            </div>
             {/* <div
               className="more-text "
               onClick={() => {

@@ -54,9 +54,36 @@ const Dashboard = () => {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [subCategoryOptions, setSubCategoryOptions] = useState([]);
   const [allPublishedBy, setAllPublishedBy] = useState([]);
-  const [selectedFirstArticle, setSelectedFirstArticle] = useState(null);
-  const [selectedSecondArticle, setSelectedSecondArticle] = useState(null);
-  const [showArticleSelection, setShowArticleSelection] = useState(false);
+
+  // Slider fix Babloo 
+const handleSetFixedPosition = async (articleId, position) => {
+  try {
+    const response = await axios.put(`${API_URL}/article/fixed/set`, {
+      articleId,
+      position
+    });
+    
+    message.success(`Article set to position ${position}`);
+    getAllArticles(); // Refresh the article list
+  } catch (error) {
+    console.error("Error setting fixed position:", error);
+    message.error(error.response?.data?.message || "Failed to set fixed position");
+  }
+};
+
+const handleClearFixedPosition = async (position) => {
+  try {
+    const response = await axios.put(`${API_URL}/article/fixed/clear`, {
+      position
+    });
+    
+    message.success(`Position ${position} cleared successfully`);
+    getAllArticles(); // Refresh the article list
+  } catch (error) {
+    console.error("Error clearing fixed position:", error);
+    message.error(error.response?.data?.message || "Failed to clear fixed position");
+  }
+};
 
   // Fetch user role on component mount
   useEffect(() => {
@@ -159,91 +186,6 @@ const Dashboard = () => {
     setAllPublishedBy(uniquePublishedBy);
   };
 
-  // Babloo 28-06 Save article positions for slider
-  // const saveArticlePositions = async () => {
-  //   try {
-  //     // 1. First reset ALL slider positions
-  //     const resetResponse = await axios.put(`${API_URL}/article/reset-positions`);
-
-  //     // 2. Update new selections
-  //     const updatePromises = [];
-
-  //     if (selectedFirstArticle) {
-  //       updatePromises.push(
-  //         axios.put(`${API_URL}/article/${selectedFirstArticle._id}`, {
-  //           priority: true,
-  //           slider: true,
-  //           sequence: 1
-  //         })
-  //       );
-  //     }
-
-  //     if (selectedSecondArticle) {
-  //       updatePromises.push(
-  //         axios.put(`${API_URL}/article/${selectedSecondArticle._id}`, {
-  //           priority: true,
-  //           slider: true,
-  //           sequence: 2
-  //         })
-  //       );
-  //     }
-
-  //     await Promise.all(updatePromises);
-
-  //     // 3. Refresh data after a short delay
-  //     setTimeout(() => {
-  //       getAllArticles();
-  //     }, 500);
-
-  //     message.success('Slider positions updated successfully!');
-  //     setShowArticleSelection(false);
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //     message.error(error.response?.data?.message || 'Failed to update slider positions');
-  //   }
-  // };
-  // When saving positions
-const saveArticlePositions = async () => {
-  try {
-    // 1. First reset all slider positions
-    await axios.put(`${API_URL}/article/reset-positions`);
-
-    // 2. Update new selections
-    const updatePromises = [];
-    
-    if (selectedFirstArticle) {
-      updatePromises.push(
-        axios.put(`${API_URL}/article/${selectedFirstArticle._id}`, {
-          priority: true,
-          slider: true,
-          sequence: 1
-        })
-      );
-    }
-
-    if (selectedSecondArticle) {
-      updatePromises.push(
-        axios.put(`${API_URL}/article/${selectedSecondArticle._id}`, {
-          priority: true,
-          slider: true,
-          sequence: 2
-        })
-      );
-    }
-
-    await Promise.all(updatePromises);
-
-    // 3. Refresh data
-    setTimeout(() => {
-      getAllArticles();
-    }, 500);
-
-    message.success('Slider positions updated successfully!');
-  } catch (error) {
-    console.error('Error:', error);
-    message.error('Failed to update slider positions');
-  }
-};
   // Update the modal handlers to properly set currentUser
   const handleDeleteCancel = () => {
     setIsModalDeleteOpen(false);
@@ -393,22 +335,6 @@ const saveArticlePositions = async () => {
       sorter: (a, b) => moment(a.createdAt) - moment(b.createdAt),
     },
     {
-    title: 'Slider Position',
-    key: 'sequence',
-    render: (_, article) => {
-      // Only show position if sequence is 1 or 2
-      if (article.sequence === 1 || article.sequence === 2) {
-        return (
-          <Tag color={article.sequence === 1 ? 'green' : 'blue'}>
-            Position {article.sequence}
-          </Tag>
-        );
-      }
-      return <Tag>Not in slider</Tag>;
-    },
-    sorter: (a, b) => (a.sequence || 0) - (b.sequence || 0),
-  },
-    {
       title: "Image",
       dataIndex: "image",
       key: "image",
@@ -428,6 +354,39 @@ const saveArticlePositions = async () => {
           <video width={100} height={100} src={image || ""} />
         )
       ),
+    },
+
+    // Slider fix Babloo 
+    {
+      title: 'Fixed Position',
+      key: 'fixedPosition',
+      render: (_, article) => (
+        <Space>
+          <Button
+            size="small"
+            onClick={() => handleSetFixedPosition(article._id, 1)}
+            type={article.fixedPosition === 1 ? 'primary' : 'default'}
+          >
+            Set 1st
+          </Button>
+          <Button
+            size="small"
+            onClick={() => handleSetFixedPosition(article._id, 2)}
+            type={article.fixedPosition === 2 ? 'primary' : 'default'}
+          >
+            Set 2nd
+          </Button>
+          {[1, 2].includes(article.fixedPosition) && (
+            <Button
+              size="small"
+              danger
+              onClick={() => handleClearFixedPosition(article.fixedPosition)}
+            >
+              Clear
+            </Button>
+          )}
+        </Space>
+      )
     },
     {
       title: "Headline",
@@ -461,6 +420,7 @@ const saveArticlePositions = async () => {
       key: "topic",
       render: ({ topic }) => <a>{topic}</a>,
     },
+
     {
       title: "News Type",
       key: "newsType",
@@ -550,54 +510,6 @@ const saveArticlePositions = async () => {
           </>
         );
       },
-    },
-    {
-      title: 'Select Position',
-      key: 'selectPosition',
-      render: (_, article) => (
-        <Space>
-          <Button
-            size="small"
-            onClick={() => {
-              if (selectedSecondArticle?._id === article._id) {
-                setSelectedSecondArticle(null);
-              }
-              setSelectedFirstArticle(
-                selectedFirstArticle?._id === article._id ? null : article
-              );
-            }}
-            type={selectedFirstArticle?._id === article._id ? 'primary' : 'default'}
-            disabled={
-              selectedSecondArticle?._id === article._id ||
-              (selectedFirstArticle &&
-                selectedFirstArticle._id !== article._id &&
-                selectedSecondArticle)
-            }
-          >
-            First
-          </Button>
-          <Button
-            size="small"
-            onClick={() => {
-              if (selectedFirstArticle?._id === article._id) {
-                setSelectedFirstArticle(null);
-              }
-              setSelectedSecondArticle(
-                selectedSecondArticle?._id === article._id ? null : article
-              );
-            }}
-            type={selectedSecondArticle?._id === article._id ? 'primary' : 'default'}
-            disabled={
-              selectedFirstArticle?._id === article._id ||
-              (selectedSecondArticle &&
-                selectedSecondArticle._id !== article._id &&
-                selectedFirstArticle)
-            }
-          >
-            Second
-          </Button>
-        </Space>
-      ),
     },
     {
       title: "Tags",
@@ -795,7 +707,7 @@ const saveArticlePositions = async () => {
               style={{ width: "100%" }}
             />
           </Col>
-          <Col style={{ marginTop: 30 }} span={6}>
+          <Col style={{ marginTop: 10 }} span={6}>
             <Input
               value={filterItemResponse.id}
               onChange={(e) =>
@@ -876,72 +788,6 @@ const saveArticlePositions = async () => {
             </Button>
           </Col>
 
-          {/* Slider work 28-06 More filter controls... */}
-
-           {/* Add this to your filter controls section */}
-          <Col style={{ marginTop: 30 }} span={4}>
-            <Button
-              style={{ width: "100%" }}
-              type="primary"
-              onClick={() => setShowArticleSelection(!showArticleSelection)}
-            >
-              {showArticleSelection ? 'Hide Selection' : 'Select Articles'}
-            </Button>
-          </Col>
-
-           {showArticleSelection && (
-            <Col span={24} style={{ marginTop: 20, marginBottom: 20 }}>
-              <Card title="Selected Articles" bordered={false}>
-                <Row gutter={16}>
-                  <Col span={12}>
-                    <h4>First Position:</h4>
-                    {selectedFirstArticle ? (
-                      <div>
-                        <p><strong>Title:</strong> {selectedFirstArticle.title}</p>
-                        <p><strong>ID:</strong> {selectedFirstArticle._id}</p>
-                        <Button
-                          onClick={() => setSelectedFirstArticle(null)}
-                          danger
-                          size="small"
-                        >
-                          Clear
-                        </Button>
-                      </div>
-                    ) : (
-                      <p>No article selected</p>
-                    )}
-                  </Col>
-                  <Col span={12}>
-                    <h4>Second Position:</h4>
-                    {selectedSecondArticle ? (
-                      <div>
-                        <p><strong>Title:</strong> {selectedSecondArticle.title}</p>
-                        <p><strong>ID:</strong> {selectedSecondArticle._id}</p>
-                        <Button
-                          onClick={() => setSelectedSecondArticle(null)}
-                          danger
-                          size="small"
-                        >
-                          Clear
-                        </Button>
-                      </div>
-                    ) : (
-                      <p>No article selected</p>
-                    )}
-                  </Col>
-                </Row>
-
-                <Button
-                  type="primary"
-                  onClick={saveArticlePositions}
-                  style={{ marginTop: 16 }}
-                  disabled={!selectedFirstArticle && !selectedSecondArticle}
-                >
-                  Save Positions
-                </Button>
-              </Card>
-            </Col>
-          )}
 
           <Col span={24} style={{ marginTop: "20px" }}>
             <Table
